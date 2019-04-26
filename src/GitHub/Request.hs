@@ -207,6 +207,12 @@ instance Accept 'MtStar where
 instance FromJSON a => ParseResponse 'MtStar a where
     parseResponse _ res = Tagged (parseResponseJSON res)
 
+instance Accept 'MtAntiopePreview where
+    contentType = Tagged "application/vnd.github.antiope-preview+json"
+
+instance FromJSON a => ParseResponse 'MtAntiopePreview a where
+    parseResponse _ res = Tagged (parseResponseJSON res)
+
 -------------------------------------------------------------------------------
 -- Raw / Diff / Patch / Sha
 -------------------------------------------------------------------------------

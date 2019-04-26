@@ -35,6 +35,7 @@ module GitHub.Data (
     -- * Module re-exports
     module GitHub.Auth,
     module GitHub.Data.Activities,
+    module GitHub.Data.CheckRuns,
     module GitHub.Data.Comments,
     module GitHub.Data.Content,
     module GitHub.Data.Definitions,
@@ -66,6 +67,7 @@ import Prelude ()
 
 import GitHub.Auth
 import GitHub.Data.Activities
+import GitHub.Data.CheckRuns
 import GitHub.Data.Comments
 import GitHub.Data.Content
 import GitHub.Data.Definitions
