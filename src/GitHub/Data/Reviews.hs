@@ -24,12 +24,14 @@ instance NFData ReviewState where
 instance Binary ReviewState
 
 instance FromJSON ReviewState where
-    parseJSON (String "APPROVED") = pure ReviewStateApproved
-    parseJSON (String "PENDING") = pure ReviewStatePending
-    parseJSON (String "DISMISSED") = pure ReviewStateDismissed
-    parseJSON (String "COMMENTED") = pure ReviewStateCommented
-    parseJSON (String "CHANGES_REQUESTED") = pure ReviewStateChangesRequested
-    parseJSON _ = fail "Unexpected ReviewState"
+    parseJSON = withText "ReviewState" $ \s -> case T.toCaseFold s of
+        "approved"          -> pure ReviewStateApproved
+        "pending"           -> pure ReviewStatePending
+        "approved"          -> pure ReviewStateApproved
+        "dismissed"         -> pure ReviewStateDismissed
+        "commented"         -> pure ReviewStateCommented
+        "changes_requested" -> pure ReviewStateChangesRequested
+        _                   -> fail $ "Unexpected ReviewState " <> show s
 
 data Review = Review
     { reviewBody :: !Text
@@ -130,8 +132,8 @@ instance NFData PullRequestReviewEventType where rnf = genericRnf
 instance Binary PullRequestReviewEventType
 
 instance FromJSON PullRequestReviewEventType where
-    parseJSON (String "submitted") = pure PullRequestReviewSubmitted
-    parseJSON (String "edited") = pure PullRequestReviewEdited
-    parseJSON (String "dismissed") = pure PullRequestReviewDismissed
-    parseJSON (String s) = fail $ "Unknown action type " <> T.unpack s
-    parseJSON v = typeMismatch "Could not build a PullRequestReviewEventType" v
+    parseJSON = withText "PullRequestReviewEventType" $ \s -> case T.toCaseFold s of
+        "submitted" -> pure PullRequestReviewSubmitted
+        "edited"    -> pure PullRequestReviewEdited
+        "dismissed" -> pure PullRequestReviewDismissed
+        _           -> fail $ "Unknown PullRequestReviewEventType " <> T.unpack s

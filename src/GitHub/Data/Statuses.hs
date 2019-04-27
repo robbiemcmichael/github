@@ -14,6 +14,7 @@ import Prelude ()
 import GitHub.Data.GitData (Commit)
 import GitHub.Data.Repos   (RepoRef)
 
+import qualified Data.Text as T
 
 data StatusState
     = StatusPending
@@ -26,11 +27,12 @@ instance NFData StatusState where rnf = genericRnf
 instance Binary StatusState
 
 instance FromJSON StatusState where
-  parseJSON (String "pending") = pure StatusPending
-  parseJSON (String "success") = pure StatusSuccess
-  parseJSON (String "error")   = pure StatusError
-  parseJSON (String "failure") = pure StatusFailure
-  parseJSON _ = fail "Could not build a StatusState"
+    parseJSON = withText "StatusState" $ \s -> case T.toCaseFold s of
+        "pending" -> pure StatusPending
+        "success" -> pure StatusSuccess
+        "error"   -> pure StatusError
+        "failure" -> pure StatusFailure
+        _         -> fail $ "Unexpected StatusState " <> show s
 
 instance ToJSON StatusState where
   toJSON StatusPending = String "pending"
