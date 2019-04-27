@@ -1,11 +1,14 @@
 module GitHub.Data.Reviews where
 
-import Data.Text (Text)
 import GitHub.Data.Definitions (SimpleUser)
 import GitHub.Data.Id (Id)
+import GitHub.Data.PullRequests (SimplePullRequest)
+import GitHub.Data.Repos (Repo)
 import GitHub.Data.URL (URL)
 import GitHub.Internal.Prelude
 import Prelude ()
+
+import qualified Data.Text as T
 
 data ReviewState
     = ReviewStatePending
@@ -13,7 +16,7 @@ data ReviewState
     | ReviewStateDismissed
     | ReviewStateCommented
     | ReviewStateChangesRequested
-    deriving (Show, Enum, Bounded, Eq, Ord, Generic)
+    deriving (Show, Data, Enum, Bounded, Typeable, Eq, Ord, Generic)
 
 instance NFData ReviewState where
     rnf = genericRnf
@@ -37,7 +40,8 @@ data Review = Review
     , reviewHtmlUrl :: !Text
     , reviewUser :: !SimpleUser
     , reviewId :: !(Id Review)
-    } deriving (Show, Generic)
+    }
+    deriving (Show, Data, Typeable, Eq, Ord, Generic)
 
 instance NFData Review where
     rnf = genericRnf
@@ -95,3 +99,39 @@ instance FromJSON ReviewComment where
             <*> o .: "updated_at"
             <*> o .: "html_url"
             <*> o .: "pull_request_url"
+
+data PullRequestReviewEvent = PullRequestReviewEvent
+    { pullRequestReviewEventAction      :: !PullRequestReviewEventType
+    , pullRequestReviewEventPullRequest :: !SimplePullRequest
+    , pullRequestReviewEventReview      :: !Review
+    , pullRequestReviewEventRepository  :: !Repo
+    , pullRequestReviewEventSender      :: !SimpleUser
+    }
+    deriving (Show, Data, Typeable, Eq, Ord, Generic)
+
+instance NFData PullRequestReviewEvent where rnf = genericRnf
+instance Binary PullRequestReviewEvent
+
+instance FromJSON PullRequestReviewEvent where
+    parseJSON = withObject "PullRequestReviewEvent" $ \o -> PullRequestReviewEvent
+        <$> o .: "action"
+        <*> o .: "pull_request"
+        <*> o .: "review"
+        <*> o .: "repository"
+        <*> o .: "sender"
+
+data PullRequestReviewEventType
+    = PullRequestReviewSubmitted
+    | PullRequestReviewEdited
+    | PullRequestReviewDismissed
+    deriving (Show, Data, Enum, Bounded, Typeable, Eq, Ord, Generic)
+
+instance NFData PullRequestReviewEventType where rnf = genericRnf
+instance Binary PullRequestReviewEventType
+
+instance FromJSON PullRequestReviewEventType where
+    parseJSON (String "submitted") = pure PullRequestReviewSubmitted
+    parseJSON (String "edited") = pure PullRequestReviewEdited
+    parseJSON (String "dismissed") = pure PullRequestReviewDismissed
+    parseJSON (String s) = fail $ "Unknown action type " <> T.unpack s
+    parseJSON v = typeMismatch "Could not build a PullRequestReviewEventType" v
