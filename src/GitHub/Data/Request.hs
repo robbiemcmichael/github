@@ -113,6 +113,7 @@ data MediaType
     | MtSha                -- ^ @application/vnd.github.v3.sha@ <https://developer.github.com/v3/media/#sha>
     | MtStar               -- ^ @application/vnd.github.v3.star+json@ <https://developer.github.com/v3/activity/starring/#alternative-response-with-star-creation-timestamps-1>
     | MtMachineManPreview  -- ^ @application/vnd.github.machine-man-preview+json@ <https://developer.github.com/v3/previews/#integrations>
+    | MtAntiopePreview     -- ^ @application/vnd.github.antiope-preview+json@ <https://developer.github.com/v3/previews/#check-runs-and-check-suites-api>
     | MtRedirect           -- ^ <https://developer.github.com/v3/repos/contents/#get-archive-link>
     | MtStatus             -- ^ Parse status
     | MtUnit               -- ^ Always succeeds

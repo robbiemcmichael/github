@@ -73,6 +73,7 @@ library
     GitHub.Data
     GitHub.Data.Activities
     GitHub.Data.Apps
+    GitHub.Data.CheckRuns
     GitHub.Data.Comments
     GitHub.Data.Content
     GitHub.Data.Definitions
@@ -104,6 +105,7 @@ library
     GitHub.Endpoints.Activity.Starring
     GitHub.Endpoints.Activity.Watching
     GitHub.Endpoints.Apps
+    GitHub.Endpoints.Checks.CheckRuns
     GitHub.Endpoints.Gists
     GitHub.Endpoints.Gists.Comments
     GitHub.Endpoints.GitData.Blobs
