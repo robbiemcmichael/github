@@ -68,6 +68,7 @@ data Team = Team
     , teamDescription     :: !(Maybe Text)
     , teamPrivacy         :: !Privacy
     , teamPermission      :: !Permission
+    , teamLdapDn          :: !(Maybe Text)
     , teamMembersUrl      :: !URL
     , teamRepositoriesUrl :: !URL
     , teamMembersCount    :: !Int
@@ -85,6 +86,7 @@ data CreateTeam = CreateTeam
     , createTeamRepoNames   :: !(Vector (Name Repo))
     , createTeamPrivacy     :: !Privacy
     , createTeamPermission  :: !Permission
+    , createTeamLdapDn      :: !(Maybe Text)
     }
     deriving (Show, Data, Typeable, Eq, Ord, Generic)
 
@@ -96,6 +98,7 @@ data EditTeam = EditTeam
     , editTeamDescription :: !(Maybe Text)
     , editTeamPrivacy     :: !(Maybe Privacy)
     , editTeamPermission  :: !(Maybe Permission)
+    , editTeamLdapDn      :: !(Maybe Text)
     }
     deriving (Show, Data, Typeable, Eq, Ord, Generic)
 
@@ -158,6 +161,7 @@ instance FromJSON Team where
         <*> o .:?"description"
         <*> o .: "privacy"
         <*> o .: "permission"
+        <*> o .:?"ldap_dn"
         <*> o .: "members_url"
         <*> o .: "repositories_url"
         <*> o .: "members_count"
@@ -165,25 +169,27 @@ instance FromJSON Team where
         <*> o .: "organization"
 
 instance ToJSON CreateTeam where
-    toJSON (CreateTeam name desc repo_names privacy permission) =
+    toJSON (CreateTeam name desc repo_names privacy permission ldapDn) =
         object $ filter notNull
             [ "name"        .= name
             , "description" .= desc
             , "repo_names"  .= repo_names
             , "privacy"     .= privacy
             , "permission"  .= permission
+            , "ldap_dn"     .= ldapDn
             ]
       where
         notNull (_, Null) = False
         notNull (_, _) = True
 
 instance ToJSON EditTeam where
-    toJSON (EditTeam name desc privacy permission) =
+    toJSON (EditTeam name desc privacy permission ldapDn) =
         object $ filter notNull
             [ "name"        .= name
             , "description" .= desc
             , "privacy"     .= privacy
             , "permission"  .= permission
+            , "ldap_dn"     .= ldapDn
             ]
       where
         notNull (_, Null) = False

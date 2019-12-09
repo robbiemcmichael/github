@@ -15,7 +15,7 @@ main = do
                   (GitHub.OAuth $ fromString token)
                   GitHub.editTeamR
                   (GitHub.mkTeamId $ read team_id)
-                  (GitHub.EditTeam (GitHub.mkTeamName $ fromString team_name) (Just $ fromString desc) Nothing Nothing)
+                  (GitHub.EditTeam (GitHub.mkTeamName $ fromString team_name) (Just $ fromString desc) Nothing Nothing Nothing)
               _                                 ->
                 error "usage: EditTeam <token> <team_id> <team_name> <description>"
   case result of
