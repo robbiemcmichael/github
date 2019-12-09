@@ -143,7 +143,7 @@ instance FromJSON SimpleTeam where
         <*> o .: "url"
         <*> o .: "name"
         <*> o .: "slug"
-        <*> o .:?"description" .!= Nothing
+        <*> o .:?"description"
         <*> o .: "privacy"
         <*> o .: "permission"
         <*> o .: "members_url"
@@ -155,7 +155,7 @@ instance FromJSON Team where
         <*> o .: "url"
         <*> o .: "name"
         <*> o .: "slug"
-        <*> o .:?"description" .!= Nothing
+        <*> o .:?"description"
         <*> o .: "privacy"
         <*> o .: "permission"
         <*> o .: "members_url"
